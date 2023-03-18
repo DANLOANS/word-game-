@@ -1,53 +1,33 @@
 import random
 
 # Define a list of words for the game
-words = ["python", "programming", "coding", "algorithm", "variable", "function"]
+words = ['python', 'code', 'programming', 'computer', 'algorithm', 'variable', 'function']
 
 # Choose a random word from the list
 word = random.choice(words)
 
-# Create a list to store the guessed letters
-guessed_letters = []
-
-# Define the maximum number of incorrect guesses
-max_incorrect_guesses = 6
-
 # Define a function to display the current state of the game
-def display_game_state():
-    # Display the current word with underscores for unguessed letters
-    display_word = ""
+def display_game_state(letters):
     for letter in word:
-        if letter in guessed_letters:
-            display_word += letter
+        if letter in letters:
+            print(letter, end=' ')
         else:
-            display_word += "_"
-    print(display_word)
-    
-    # Display the guessed letters
-    print("Guessed letters:", " ".join(guessed_letters))
-    
-    # Display the remaining number of incorrect guesses
-    incorrect_guesses = len([letter for letter in guessed_letters if letter not in word])
-    print("Incorrect guesses:", incorrect_guesses, "/", max_incorrect_guesses)
+            print('_', end=' ')
+    print()
 
 # Define the game loop
+letters_guessed = []
 while True:
     # Display the current state of the game
-    display_game_state()
+    display_game_state(letters_guessed)
     
-    # Check if the player has won
-    if all(letter in guessed_letters for letter in word):
-        print("Congratulations, you won!")
-        break
-    
-    # Check if the player has lost
-    incorrect_guesses = len([letter for letter in guessed_letters if letter not in word])
-    if incorrect_guesses >= max_incorrect_guesses:
-        print("Sorry, you lost. The word was", word)
+    # Check if the player has guessed all the letters
+    if set(word) <= set(letters_guessed):
+        print("Congratulations, you guessed the word!")
         break
     
     # Prompt the player to guess a letter
-    guess = input("Guess a letter: ")
+    guess = input("Guess a letter: ").lower()
     
     # Check if the guess is valid
     if len(guess) != 1 or not guess.isalpha():
@@ -55,9 +35,15 @@ while True:
         continue
     
     # Check if the letter has already been guessed
-    if guess in guessed_letters:
-        print("You already guessed that letter, please try again.")
+    if guess in letters_guessed:
+        print("You already guessed that letter, try again.")
         continue
     
-    # Add the guessed letter to the list
-    guessed_letters.append(guess)
+    # Add the letter to the list of guessed letters
+    letters_guessed.append(guess)
+    
+    # Check if the letter is in the word
+    if guess in word:
+        print("Good guess!")
+    else:
+        print("Sorry, that letter is not in the word.")
